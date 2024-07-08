@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import com.example.sparksupport.myecommerce.auth.ProductDTO;
 import com.example.sparksupport.myecommerce.entity.Product;
 import com.example.sparksupport.myecommerce.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -38,13 +40,23 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(int id, Product product) {
+    public Product updateProduct(int id, ProductDTO productDTO) {
         if (!productRepository.existsById(id)) {
             throw new IllegalArgumentException("Product not found with id: " + id);
         }
-        product.setId(id); 
-       return productRepository.save(product);
+
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
+
+        // Update the existing product with values from the DTO
+        existingProduct.setName(productDTO.getName());
+        existingProduct.setDescription(productDTO.getDescription());
+        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setQuantity(productDTO.getQuantity());
+
+        return productRepository.save(existingProduct);
     }
+
 
     public void deleteProduct(int id) {
         productRepository.deleteById(id);

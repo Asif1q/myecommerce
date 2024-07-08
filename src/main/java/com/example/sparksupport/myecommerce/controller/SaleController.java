@@ -1,5 +1,6 @@
 package com.example.sparksupport.myecommerce.controller;
 
+import com.example.sparksupport.myecommerce.auth.SaleDTO;
 import com.example.sparksupport.myecommerce.entity.Sale;
 import com.example.sparksupport.myecommerce.services.SaleService;
 import com.example.sparksupport.myecommerce.exception.ErrorDetails;
@@ -68,9 +69,9 @@ public class SaleController {
     }
     @PutMapping("/admin/update/{saleId}")
     @SecurityRequirement(name = "sparksupport-data-api")
-    public ResponseEntity<?> updateSale(@PathVariable int saleId, @RequestBody Sale sale) {
+    public ResponseEntity<?> updateSale(@PathVariable int saleId, @RequestBody SaleDTO saleDTO) {
         try {
-            Sale updatedSale = saleService.updateSale(saleId, sale);
+            Sale updatedSale = saleService.updateSale(saleId, saleDTO);
             return ResponseEntity.ok(updatedSale);
         } catch (IllegalArgumentException ex) {
             log.error("IllegalArgumentException in updateSale with id: {}", saleId, ex);

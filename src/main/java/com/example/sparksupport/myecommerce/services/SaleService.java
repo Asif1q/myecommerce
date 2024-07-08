@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.example.sparksupport.myecommerce.auth.SaleDTO;
 import com.example.sparksupport.myecommerce.entity.Product;
 import com.example.sparksupport.myecommerce.entity.Sale;
 import com.example.sparksupport.myecommerce.repository.ProductRepository;
@@ -85,11 +86,9 @@ public class SaleService {
     }
 
     @Transactional
-    public Sale updateSale(int saleId, Sale updatedSale) {
+    public Sale updateSale(int saleId, SaleDTO updatedSale) {
         Sale existingSale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new IllegalArgumentException("Sale not found with id: " + saleId));
-
-        updatedSale.setProduct(existingSale.getProduct());
 
         existingSale.setQuantity(updatedSale.getQuantity());
         existingSale.setSaleDate(updatedSale.getSaleDate());

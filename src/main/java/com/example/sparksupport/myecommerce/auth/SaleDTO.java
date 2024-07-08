@@ -11,8 +11,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class SaleDTO {
-    private int id;
     private int quantity;
     private LocalDate saleDate;
-    private double totalRevenue;
 }

@@ -49,6 +49,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    During authentication, the raw password provided by the user is encoded 
+//    using the same PasswordEncoder and compared with the encoded password stored in the database.
+//    The DaoAuthenticationProvider calls the loadUserByUsername method of the UserDetailsService to get
+//     the UserDetails object, which includes the encoded password.
+
+
+//The AuthenticationManager receives the login request encapsulated in an Authentication object.
     @Bean
     public AuthenticationManager authManager(UserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
@@ -67,6 +74,7 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
     }
 
+    //The SecurityFilterChain uses the Authentication object stored in the SecurityContext to make authorization decisions.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -91,6 +99,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
             )
+            //The JwtAuthenticationFilter (configured by oauth2ResourceServer) intercepts the request.
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling().accessDeniedHandler(accessDeniedHandler);

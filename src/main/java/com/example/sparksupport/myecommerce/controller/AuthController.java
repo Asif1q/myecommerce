@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.sparksupport.myecommerce.entity.Account;
 
@@ -55,8 +54,10 @@ public class AuthController {
     @Autowired
     private AccountService accountService;
 
+    //The newly created Authentication object is stored in the SecurityContext. 
+    //Yes, authentication happens before a token is generated. 
+    
     @PostMapping("/token")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TokenDTO> token(@Valid @RequestBody UserLoginDTO userLogin) throws AuthenticationException {
         try {
             Authentication authentication = authenticationManager
@@ -70,7 +71,6 @@ public class AuthController {
     }
 
     @PostMapping(value = "/users/add", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "400", description = "Please enter a valid email and Password length between 6 to 20 characters")
     @ApiResponse(responseCode = "200", description = "Account added")
     @Operation(summary = "Add a new User")

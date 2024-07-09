@@ -4,11 +4,7 @@ import com.example.sparksupport.myecommerce.auth.ProductDTO;
 import com.example.sparksupport.myecommerce.entity.Product;
 import com.example.sparksupport.myecommerce.services.ProductService;
 import com.example.sparksupport.myecommerce.services.SaleService;
-import com.example.sparksupport.myecommerce.exception.ErrorDetails;
 import com.example.sparksupport.myecommerce.exception.ProductNotFoundException;
-
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,11 +17,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @Tag(name = "Product Controller", description = "Controller for Product management")
+@SecurityRequirement(name = "sparksupport-data-api")
 @RequestMapping("/api/products")
 public class ProductController {
-
+        
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
-
 
     private final ProductService productService;
     private final SaleService saleService;
@@ -36,126 +32,58 @@ public class ProductController {
     }
 
     @GetMapping
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
-        try {
             Page<Product> products = productService.getAllProducts(page, size);
+            log.info("Product listed successfully {} :"+products);
             return ResponseEntity.ok(products);
-        } catch (Exception ex) {
-            log.error("Error fetching all products", ex);
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
     }
 
     @GetMapping("/{id}")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> getProductById(@PathVariable int id) {
-        try {
             Product product = productService.getProductById(id)
-                    .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
-            return ResponseEntity.ok(product);
-        } catch (ProductNotFoundException ex) {
-            log.error("ProductNotFoundException in getProductById with id: {}", id);
-            return ResponseEntity.badRequest().body("Invalid request: " + ex.getMessage());
-        } catch (Exception ex) {
-            log.error("Error fetching product with id: {}", id, ex);
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
+                    .orElseThrow(() -> new ProductNotFoundException("ProductNotFoundException in getProductById with id: "+ id));
+                    log.info("Product Details Result : {}", product);
+                    return ResponseEntity.ok(product);
+        
     }
 
     @PutMapping("/admin/update/{id}")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody ProductDTO productDTO) {
-        try {
             Product updatedProduct = productService.updateProduct(id, productDTO);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (IllegalArgumentException ex) {
-            log.error("IllegalArgumentException in updateProduct with id: {}", id);
-            return ResponseEntity.badRequest().body("Invalid request: " + ex.getMessage());
-        } catch (Exception ex) {           
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
+            log.info("Updated Product Details for id : {"+id+"}", updatedProduct);
+            return ResponseEntity.ok(updatedProduct);     
     }
 
     @PostMapping("/admin/add")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
-        try {
             Product createdProduct = productService.createProduct(product);
+            log.info("Created Product Details {}", createdProduct);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        } catch (IllegalArgumentException ex) {
-            log.error("IllegalArgumentException in createProduct with product: {}", product, ex);
-            return ResponseEntity.badRequest().body("Invalid request: " + ex.getMessage());
-        } catch (Exception ex) {
-            log.error("Error on createProduct method with product: {}", product, ex);
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
     }
+  
 
     @DeleteMapping("/admin/delete/{id}")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-        try {
             productService.deleteProduct(id);
+            log.info("Deleted Product {}", id);
             return ResponseEntity.noContent().build();
-        } catch (ProductNotFoundException ex) {
-            log.error("Product not found with id: {}", id, ex);
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            log.error("Error on deleteProduct with id: {}", id, ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-    
-    
 
+    }
+       
     @GetMapping("/admin/totalRevenue")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> getTotalRevenue() {
-        try {
             double totalRevenue = saleService.getTotalRevenue();
+            log.info("totalRevenue {}", totalRevenue);
             return ResponseEntity.ok(totalRevenue);
-        } catch (Exception ex) {
-            log.error("Error fetching total revenue", ex);
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
     }
 
     @GetMapping("/admin/revenueByProduct/{productId}")
-    @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> getRevenueByProduct(@PathVariable int productId) {
-        try {
             double revenue = saleService.getRevenueByProduct(productId);
+            log.info("Returned getRevenueByProduct {}", revenue);
             return ResponseEntity.ok("Revenue By Product is: " + revenue);
-        } catch (Exception ex) {
-            log.error("Error fetching revenue for product with id: {}", productId, ex);
-            ErrorDetails errorDetails = new ErrorDetails(
-                    new Date(),
-                    "Internal Server Error",
-                    ex.toString());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
-        }
+
     }
     
 }

@@ -32,28 +32,28 @@ public class SaleController {
     @PostMapping("/admin/add/{productId}")
     @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> createSale(@PathVariable int productId, @RequestBody Sale sale) {
-            Sale createdSale = saleService.createSale(productId, sale);
-            log.info("Sale created successfully for productId: {"+productId+"}  :"+createdSale);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdSale);
+        Sale createdSale = saleService.createSale(productId, sale);
+        log.info("Sale created successfully for productId: {"+productId+"}  :"+createdSale);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdSale);
 
     }
     
 
     @GetMapping("/admin/salesByProduct/{productId}")
     public ResponseEntity<?> getSalesByProduct(@PathVariable int productId) {
-            List<Sale> sales = saleService.getSalesByProductId(productId).
-                            orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
-            log.info("Sale Results : {}", sales);
-            return ResponseEntity.ok(sales);
+        List<Sale> sales = saleService.getSalesByProductId(productId).
+                        orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
+        log.info("Sale Results : {}", sales);
+        return ResponseEntity.ok(sales);
         } 
 
 
     @PutMapping("/admin/update/{saleId}")
     @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<?> updateSale(@PathVariable int saleId, @RequestBody SaleDTO saleDTO) {
-            Sale updatedSale = saleService.updateSale(saleId, saleDTO);
-            log.info("Updated Sales for sale id {"+saleId+ "}   :"+updatedSale);
-            return ResponseEntity.ok(updatedSale);
+        Sale updatedSale = saleService.updateSale(saleId, saleDTO);
+        log.info("Updated Sales for sale id {"+saleId+ "}   :"+updatedSale);
+        return ResponseEntity.ok(updatedSale);
         
     }
     
@@ -61,9 +61,9 @@ public class SaleController {
     @DeleteMapping("/admin/delete/{saleId}")
     @SecurityRequirement(name = "sparksupport-data-api")
     public ResponseEntity<Void> deleteSale(@PathVariable int saleId) {
-            saleService.deleteSale(saleId);
-            log.info("Deleted Sales with sale Id : {" +saleId+"}");
-            return ResponseEntity.noContent().build();
+        saleService.deleteSale(saleId);
+        log.info("Deleted Sales with sale Id : {" +saleId+"}");
+        return ResponseEntity.noContent().build();
 
     }
 

@@ -34,55 +34,55 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
-            Page<Product> products = productService.getAllProducts(page, size);
-            log.info("Product listed successfully {} :"+products);
-            return ResponseEntity.ok(products);
+        Page<Product> products = productService.getAllProducts(page, size);
+        log.info("Product listed successfully {} :"+products);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable int id) {
-            Product product = productService.getProductById(id)
+        Product product = productService.getProductById(id)
                     .orElseThrow(() -> new ProductNotFoundException("ProductNotFoundException in getProductById with id: "+ id));
-                    log.info("Product Details Result : {}", product);
-                    return ResponseEntity.ok(product);
+        log.info("Product Details Result : {}", product);
+        return ResponseEntity.ok(product);
         
     }
 
     @PutMapping("/admin/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody ProductDTO productDTO) {
-            Product updatedProduct = productService.updateProduct(id, productDTO);
-            log.info("Updated Product Details for id : {"+id+"}", updatedProduct);
-            return ResponseEntity.ok(updatedProduct);     
+        Product updatedProduct = productService.updateProduct(id, productDTO);
+        log.info("Updated Product Details for id : {"+id+"}", updatedProduct);
+        return ResponseEntity.ok(updatedProduct);     
     }
 
     @PostMapping("/admin/add")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
-            Product createdProduct = productService.createProduct(product);
-            log.info("Created Product Details {}", createdProduct);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+        Product createdProduct = productService.createProduct(product);
+        log.info("Created Product Details {}", createdProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
   
 
     @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-            productService.deleteProduct(id);
-            log.info("Deleted Product {}", id);
-            return ResponseEntity.noContent().build();
+        productService.deleteProduct(id);
+        log.info("Deleted Product {}", id);
+        return ResponseEntity.noContent().build();
 
     }
        
     @GetMapping("/admin/totalRevenue")
     public ResponseEntity<?> getTotalRevenue() {
-            double totalRevenue = saleService.getTotalRevenue();
-            log.info("totalRevenue {}", totalRevenue);
-            return ResponseEntity.ok(totalRevenue);
+        double totalRevenue = saleService.getTotalRevenue();
+        log.info("totalRevenue {}", totalRevenue);
+        return ResponseEntity.ok(totalRevenue);
     }
 
     @GetMapping("/admin/revenueByProduct/{productId}")
     public ResponseEntity<?> getRevenueByProduct(@PathVariable int productId) {
-            double revenue = saleService.getRevenueByProduct(productId);
-            log.info("Returned getRevenueByProduct {}", revenue);
-            return ResponseEntity.ok("Revenue By Product is: " + revenue);
+        double revenue = saleService.getRevenueByProduct(productId);
+        log.info("Returned getRevenueByProduct {}", revenue);
+        return ResponseEntity.ok("Revenue By Product is: " + revenue);
 
     }
     

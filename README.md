@@ -6,5 +6,5 @@ DB details : application.properties
 
 Instructions : 
 create database sparksupport ,
-Uncomment the config.java file for the first run to feed the seedData to the database,
-Comment the config.java  back again if you are stopping and running it again to avoid row duplicates
+Uncomment the SeedData.java file for the first run to feed the seedData to the database,
+Comment the SeedData.java  back again if you are stopping and running it again to avoid row duplicates

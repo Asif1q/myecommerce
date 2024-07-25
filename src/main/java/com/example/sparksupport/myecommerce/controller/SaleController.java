@@ -3,7 +3,6 @@ package com.example.sparksupport.myecommerce.controller;
 import com.example.sparksupport.myecommerce.auth.SaleDTO;
 import com.example.sparksupport.myecommerce.entity.Sale;
 import com.example.sparksupport.myecommerce.services.SaleService;
-import com.example.sparksupport.myecommerce.exception.ProductNotFoundException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -41,8 +40,7 @@ public class SaleController {
 
     @GetMapping("/admin/salesByProduct/{productId}")
     public ResponseEntity<?> getSalesByProduct(@PathVariable int productId) {
-        List<Sale> sales = saleService.getSalesByProductId(productId).
-                        orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
+        List<Sale> sales = saleService.getSalesByProductId(productId);
         log.info("Sale Results : {}", sales);
         return ResponseEntity.ok(sales);
         } 

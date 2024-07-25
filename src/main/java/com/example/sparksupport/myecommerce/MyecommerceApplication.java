@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @SpringBootApplication
 @SecurityScheme(name = "sparksupport-data-api", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
-// @EnableConfigurationProperties(RsaKeyProperties.class)
 public class MyecommerceApplication {
 
 	public static void main(String[] args) {

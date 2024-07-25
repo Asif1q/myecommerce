@@ -8,7 +8,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;@Entity
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+@Entity
 public class Product {
 
     @Id
@@ -94,7 +95,10 @@ public class Product {
     @Override
     public String toString() {
         return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
-                + ", quantity=" + quantity + ", sales=" + sales + "]";
+                + ", quantity=" + quantity + "]";
     }
+
+
+    
 
 }

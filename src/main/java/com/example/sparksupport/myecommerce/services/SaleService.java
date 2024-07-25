@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.sparksupport.myecommerce.auth.SaleDTO;
 import com.example.sparksupport.myecommerce.entity.Product;
 import com.example.sparksupport.myecommerce.entity.Sale;
+import com.example.sparksupport.myecommerce.exception.SaleNotFoundException;
 import com.example.sparksupport.myecommerce.repository.ProductRepository;
 import com.example.sparksupport.myecommerce.repository.SaleRepository;
 
@@ -57,7 +58,7 @@ public class SaleService {
             }
         } else {
             log.error("No sales found for product with ID: {}", productId);
-            throw new RuntimeException("No sales found for product with ID: " + productId);
+            throw new SaleNotFoundException("No sales found for product with ID: " + productId);
         }
 
         return revenue;
@@ -69,11 +70,12 @@ public class SaleService {
 
     public Sale getSaleById(int id) {
         return saleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Sale not found with id: " + id));
+                .orElseThrow(() -> new SaleNotFoundException("Sale not found with id: " + id));
     }
 
-    public Optional<List<Sale>> getSalesByProductId(int productId) {
-        return saleRepository.findByProductId(productId);
+    public List<Sale> getSalesByProductId(int productId) {
+        return saleRepository.findByProductId(productId)
+        .orElseThrow(() -> new SaleNotFoundException("Sale not found with id: " + productId));
     }
 
     @Transactional
@@ -88,17 +90,14 @@ public class SaleService {
     @Transactional
     public Sale updateSale(int saleId, SaleDTO updatedSale) {
         Sale existingSale = saleRepository.findById(saleId)
-                .orElseThrow(() -> new IllegalArgumentException("Sale not found with id: " + saleId));
+                .orElseThrow(() -> new SaleNotFoundException("Sale not found with id: " + saleId));
 
         existingSale.setQuantity(updatedSale.getQuantity());
         existingSale.setSaleDate(updatedSale.getSaleDate());
     
         return saleRepository.save(existingSale);
     }
-    
-    
-    
-    
+       
     
     public void deleteSale(int id) {
         saleRepository.deleteById(id);

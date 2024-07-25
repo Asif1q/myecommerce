@@ -4,7 +4,6 @@ import com.example.sparksupport.myecommerce.auth.ProductDTO;
 import com.example.sparksupport.myecommerce.entity.Product;
 import com.example.sparksupport.myecommerce.services.ProductService;
 import com.example.sparksupport.myecommerce.services.SaleService;
-import com.example.sparksupport.myecommerce.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,8 +40,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable int id) {
-        Product product = productService.getProductById(id)
-                    .orElseThrow(() -> new ProductNotFoundException("ProductNotFoundException in getProductById with id: "+ id));
+        Product product = productService.getProductById(id);
         log.info("Product Details Result : {}", product);
         return ResponseEntity.ok(product);
         
@@ -74,15 +72,17 @@ public class ProductController {
     @GetMapping("/admin/totalRevenue")
     public ResponseEntity<?> getTotalRevenue() {
         double totalRevenue = saleService.getTotalRevenue();
-        log.info("totalRevenue {}", totalRevenue);
-        return ResponseEntity.ok(totalRevenue);
+        String formattedRevenue = String.format("%.2f", totalRevenue);
+        log.info("totalRevenue {}", formattedRevenue);
+        return ResponseEntity.ok(formattedRevenue);
     }
 
     @GetMapping("/admin/revenueByProduct/{productId}")
     public ResponseEntity<?> getRevenueByProduct(@PathVariable int productId) {
         double revenue = saleService.getRevenueByProduct(productId);
-        log.info("Returned getRevenueByProduct {}", revenue);
-        return ResponseEntity.ok("Revenue By Product is: " + revenue);
+        String formattedRevenue = String.format("%.2f", revenue);
+        log.info("Returned getRevenueByProduct {}", formattedRevenue);
+        return ResponseEntity.ok("Revenue By Product is: " + formattedRevenue);
 
     }
     

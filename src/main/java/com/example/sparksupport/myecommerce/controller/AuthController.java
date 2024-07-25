@@ -55,7 +55,7 @@ public class AuthController {
     private AccountService accountService;
 
     //The newly created Authentication object is stored in the SecurityContext. 
-    //Yes, authentication happens before a token is generated. 
+    //authentication happens before a token is generated. 
     
     @PostMapping("/token")
     public ResponseEntity<TokenDTO> token(@Valid @RequestBody UserLoginDTO userLogin) throws AuthenticationException {

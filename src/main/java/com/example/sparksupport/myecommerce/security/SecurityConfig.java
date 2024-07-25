@@ -97,7 +97,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
-        // TODO: remove these after upgrading the DB from H2 in-file DB
+
         http.csrf().disable();
         http.headers().frameOptions().disable();
 
